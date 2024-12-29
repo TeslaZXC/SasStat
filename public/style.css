@@ -1,0 +1,118 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #1a1a2e;
+    color: white;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  h1 {
+    text-align: center;
+    width: 100%;    
+    margin-top: 20px;
+  }
+
+  #killsChart {
+    width: 600px;
+    height: 400px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
+  }
+
+  #playerTable {
+    margin: 20px;
+    border-collapse: collapse;
+    width: 300px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
+  }
+
+  #playerTable th, #playerTable td {
+    padding: 12px;
+    text-align: center;
+  }
+
+  #playerTable th {
+    background: linear-gradient(45deg, #3f51b5, #2196f3);
+    color: white;
+    font-weight: bold;
+  }
+
+  #playerTable tr:hover {
+    background: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  #playerTable td {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  button {
+    padding: 10px 20px;
+    background: linear-gradient(45deg, #ff5722, #e91e63);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.3s;
+  }
+
+  button:hover {
+    transform: scale(1.05);
+    background: linear-gradient(45deg, #ff7043, #f50057);
+  }
+
+  #modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    color: black;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    animation: fadeIn 0.3s;
+  }
+
+  #modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  #loading {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 24px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    animation: fadeIn 0.5s infinite alternate;
+  }

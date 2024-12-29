@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Player Stats</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="loading">Загрузка данных...</div>
+  <h1>Объединенная статистика игроков</h1>
+  <table id="playerTable">
+    <thead>
+      <tr>
+        <th>Игрок</th>
+        <th>Убийства</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <canvas id="killsChart"></canvas>
+
+  <div id="modal-overlay"></div>
+  <div id="modal">
+    <h2 id="modal-title"></h2>
+    <pre id="modal-content"></pre>
+    <button onclick="closeModal()">Закрыть</button>
+  </div>
+
+  <script>
+    const loadingElement = document.getElementById('loading');
+
+    function showLoading() {
+      loadingElement.style.display = 'block';
+    }
+
+    function hideLoading() {
+      loadingElement.style.display = 'none';
+    }
+
+    function openModal(title, content) {
+      document.getElementById('modal-title').textContent = title;
+      document.getElementById('modal-content').textContent = content;
+      document.getElementById('modal').style.display = 'block';
+      document.getElementById('modal-overlay').style.display = 'block';
+    }
+
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+      document.getElementById('modal-overlay').style.display = 'none';
+    }
+
+    function populateTable(playersData) {
+      const tableBody = document.querySelector('#playerTable tbody');
+      tableBody.innerHTML = ''; 
+      playersData.sort((a, b) => b.kills - a.kills); 
+
+      playersData.forEach(player => {
+        const row = document.createElement('tr');
+        const nameCell = document.createElement('td');
+        const killsCell = document.createElement('td');
+
+        nameCell.textContent = player.name;
+        killsCell.textContent = player.kills;
+
+        row.appendChild(nameCell);
+        row.appendChild(killsCell);
+        tableBody.appendChild(row);
+
+        row.addEventListener('click', () => {
+          fetch(`/player-details?name=${encodeURIComponent(player.name)}`)
+            .then(response => response.json())
+            .then(data => {
+              openModal(`Статистика для ${player.name}`, JSON.stringify(data, null, 2));
+            });
+        });
+      });
+    }
+
+    showLoading();
+    fetch('/player-stats')
+      .then(response => response.json())
+      .then(playersData => {
+        hideLoading();
+        populateTable(playersData);
+
+        const playerNames = playersData.map(player => player.name);
+        const kills = playersData.map(player => player.kills);
+
+        const ctx = document.getElementById('killsChart').getContext('2d');
+        new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: playerNames,
+            datasets: [{
+              label: 'Количество килов',
+              data: kills,
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: false,
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+      })
+      .catch(error => {
+        hideLoading();
+        console.error('Ошибка при получении данных:', error);
+      });
+  </script>
+</body>
+</html>
